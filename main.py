@@ -23,7 +23,14 @@ def menu():
     print("10. Get best goal scorers of a game")
     print("11. Get best assist scorers of a game")
     print("----------------------------------")
-    print("12. Exit")
+    print("12. Get best defensemen (points) of a team")
+    print("13. Get best defensemen (goals) of a team")
+    print("14. Get best defensemen (assists) of a team")
+    print("----------------------------------")
+    print("15. Get today's best defensemen (points) of a game")
+    print("16. Get today's best defensemen (goals) of a game")
+    print("17. Get today's best defensemen (assists) of a game")
+    print("18. Exit")
 
     return input("Choose an option: ")
 
@@ -72,8 +79,8 @@ def handle_menu():
             break
         elif option == "9":
             games = get_today_games()
-            for game in games:
-                print(game)
+            for i in range(len(games)):
+                print(f"{i}. {games[i]}")
             game_index = int(input("Enter game index: "))
             players = get_game_best_points_scorers(games[game_index])
             for player in players:
@@ -81,8 +88,8 @@ def handle_menu():
             break
         elif option == "10":
             games = get_today_games()
-            for game in games:
-                print(game)
+            for i in range(len(games)):
+                print(f"{i}. {games[i]}")
             game_index = int(input("Enter game index: "))
             players = get_game_best_goal_scorers(games[game_index])
             for player in players:
@@ -90,10 +97,55 @@ def handle_menu():
             break
         elif option == "11":
             games = get_today_games()
-            for game in games:
-                print(game)
+            for i in range(len(games)):
+                print(f"{i}. {games[i]}")
             game_index = int(input("Enter game index: "))
             players = get_game_best_assist_scorers(games[game_index])
+            for player in players:
+                print(f"{player[0]} ({player[1]}): {player[2]} assists")
+            break
+        elif option == "12":
+            team_name = input("Enter team code: ")
+            players = get_team_best_defensemen_points_scorers(team_name)
+            for player in players:
+                print(f"{player[0]}: {player[1]} points")
+            break
+        elif option == "13":
+            team_name = input("Enter team code: ")
+            players = get_team_best_defensemen_goal_scorers(team_name)
+            for player in players:
+                print(f"{player[0]}: {player[1]} goals")
+            break
+        elif option == "14":
+            team_name = input("Enter team code: ")
+            players = get_team_best_defensemen_assist_scorers(team_name)
+            for player in players:
+                print(f"{player[0]}: {player[1]} assists")
+            break
+        elif option == "15":
+            games = get_today_games()
+            for i in range(len(games)):
+                print(f"{i}. {games[i]}")
+            game_index = int(input("Enter game index: "))
+            players = get_game_best_defensemen_points_scorers(games[game_index])
+            for player in players:
+                print(f"{player[0]} ({player[1]}): {player[2]} points")
+            break
+        elif option == "16":
+            games = get_today_games()
+            for i in range(len(games)):
+                print(f"{i}. {games[i]}")
+            game_index = int(input("Enter game index: "))
+            players = get_game_best_defensemen_goal_scorers(games[game_index])
+            for player in players:
+                print(f"{player[0]} ({player[1]}): {player[2]} goals")
+            break
+        elif option == "17":
+            games = get_today_games()
+            for i in range(len(games)):
+                print(f"{i}. {games[i]}")
+            game_index = int(input("Enter game index: "))
+            players = get_game_best_defensemen_assist_scorers(games[game_index])
             for player in players:
                 print(f"{player[0]} ({player[1]}): {player[2]} assists")
             break
