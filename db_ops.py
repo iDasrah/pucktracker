@@ -202,3 +202,115 @@ def get_game_best_assist_scorers(game):
     conn.close()
 
     return players
+
+def get_team_best_defensemen_points_scorers(team_name):
+    """
+    Récupère les trois meilleurs défenseurs marqueurs de points d'une équipe spécifique.
+
+    :param team_name: Code de l'équipe.
+    :return: Liste des trois meilleurs défenseurs marqueurs de points.
+    """
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT name, points FROM players WHERE lower(team_code) = lower(?) AND position = 'defenseman' ORDER BY points DESC LIMIT 3
+    ''', (team_name,))
+
+    players = cursor.fetchall()
+    conn.close()
+
+    return players
+
+def get_team_best_defensemen_goal_scorers(team_name):
+    """
+    Récupère les trois meilleurs défenseurs buteurs d'une équipe spécifique.
+
+    :param team_name: Code de l'équipe.
+    :return: Liste des trois meilleurs défenseurs buteurs.
+    """
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT name, goals FROM players WHERE lower(team_code) = lower(?) AND position = 'defenseman' ORDER BY goals DESC LIMIT 3
+    ''', (team_name,))
+
+    players = cursor.fetchall()
+    conn.close()
+
+    return players
+
+def get_team_best_defensemen_assist_scorers(team_name):
+    """
+    Récupère les trois meilleurs défenseurs passeurs d'une équipe spécifique.
+
+    :param team_name: Code de l'équipe.
+    :return: Liste des trois meilleurs défenseurs passeurs.
+    """
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT name, assists FROM players WHERE lower(team_code) = lower(?) AND position = 'defenseman' ORDER BY assists DESC LIMIT 3
+    ''', (team_name,))
+
+    players = cursor.fetchall()
+    conn.close()
+
+    return players
+
+def get_game_best_defensemen_points_scorers(game):
+    """
+    Récupère les 5 meilleurs défenseurs pointeurs des équipes jouant ce match.
+
+    :return: Liste des 5 meilleurs défenseurs marqueurs de points.
+    """
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT name, team_code, points FROM players WHERE (lower(team_code) = lower(?) OR lower(team_code) = lower(?)) AND position = 'defenseman' ORDER BY points DESC LIMIT 5
+    ''', (game.home, game.away,))
+
+    players = cursor.fetchall()
+    conn.close()
+
+    return players
+
+def get_game_best_defensemen_goal_scorers(game):
+    """
+    Récupère les 5 meilleurs défenseurs buteurs des équipes jouant ce match.
+
+    :return: Liste des 5 meilleurs défenseurs buteurs.
+    """
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT name, team_code, goals FROM players WHERE (lower(team_code) = lower(?) OR lower(team_code) = lower(?)) AND position = 'defenseman' ORDER BY goals DESC LIMIT 5
+    ''', (game.home, game.away,))
+
+    players = cursor.fetchall()
+    conn.close()
+
+    return players
+
+def get_game_best_defensemen_assist_scorers(game):
+    """
+    Récupère les 5 meilleurs défenseurs passeurs des équipes jouant ce match.
+
+    :return: Liste des 5 meilleurs défenseurs passeurs.
+    """
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT name, team_code, assists FROM players WHERE (lower(team_code) = lower(?) OR lower(team_code) = lower(?)) AND position = 'defenseman' ORDER BY assists DESC LIMIT 5
+    ''', (game.home, game.away,))
+
+    players = cursor.fetchall()
+    conn.close()
+
+    return players
+
