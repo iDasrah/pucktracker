@@ -11,6 +11,36 @@ teams = [
 # Chemin vers la base de données SQLite
 db_path = 'data/db.sqlite'
 
+def create_tables():
+    """
+    Crée les tables `teams` et `players` dans la base de données SQLite si elles n'existent pas déjà.
+    """
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS teams (
+            code TEXT PRIMARY KEY,
+            name TEXT NOT NULL
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS players (
+            id INTEGER PRIMARY KEY,
+            team_code TEXT NOT NULL,
+            name TEXT NOT NULL,
+            position TEXT NOT NULL,
+            points INTEGER,
+            goals INTEGER,
+            assists INTEGER,
+            active INTEGER DEFAULT 1,
+            FOREIGN KEY (team_code) REFERENCES teams (code)
+        )
+    ''')
+
+    conn.commit()
+    conn.close()
 
 def save_team_to_db(team):
     """
@@ -36,7 +66,6 @@ def save_team_to_db(team):
     conn.commit()
     conn.close()
 
-
 def reset_db():
     """
     Réinitialise la base de données en supprimant toutes les entrées des tables `teams` et `players`.
@@ -55,7 +84,6 @@ def reset_db():
     conn.commit()
     conn.close()
 
-
 def update_team(team_name):
     """
     Met à jour les données d'une équipe spécifique en récupérant les informations de l'API et en les enregistrant dans la base de données.
@@ -66,7 +94,6 @@ def update_team(team_name):
     for player in team.forwards + team.defensemen:
         fill_player_stats(player)
     save_team_to_db(team)
-
 
 def update_today_games_teams():
     """
@@ -79,7 +106,6 @@ def update_today_games_teams():
         update_team(game.away)
         print(f"Updated {game.home} and {game.away}")
 
-
 def update_all_teams():
     """
     Met à jour les données de toutes les équipes en récupérant les informations de l'API et en les enregistrant dans la base de données.
@@ -88,10 +114,9 @@ def update_all_teams():
         update_team(team_name)
         print(f"Updated {team_name}")
 
-
 def get_team_best_points_scorers(team_name):
     """
-    Récupère les trois meilleurs marqueurs de points d'une équipe spécifique.
+    Récupère les 5 meilleurs marqueurs de points d'une équipe spécifique.
 
     :param team_name: Code de l'équipe.
     :return: Liste des trois meilleurs marqueurs de points.
@@ -100,7 +125,7 @@ def get_team_best_points_scorers(team_name):
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT name, points FROM players WHERE lower(team_code) = lower(?) ORDER BY points DESC LIMIT 3
+        SELECT name, points FROM players WHERE lower(team_code) = lower(?) AND active = 1 ORDER BY points DESC LIMIT 5
     ''', (team_name,))
 
     players = cursor.fetchall()
@@ -108,10 +133,9 @@ def get_team_best_points_scorers(team_name):
 
     return players
 
-
 def get_team_best_goal_scorers(team_name):
     """
-    Récupère les trois meilleurs buteurs d'une équipe spécifique.
+    Récupère les 5 meilleurs buteurs d'une équipe spécifique.
 
     :param team_name: Code de l'équipe.
     :return: Liste des trois meilleurs buteurs.
@@ -120,7 +144,7 @@ def get_team_best_goal_scorers(team_name):
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT name, goals FROM players WHERE lower(team_code) = lower(?) ORDER BY goals DESC LIMIT 3
+        SELECT name, goals FROM players WHERE lower(team_code) = lower(?) AND active = 1 ORDER BY goals DESC LIMIT 5
     ''', (team_name,))
 
     players = cursor.fetchall()
@@ -128,10 +152,9 @@ def get_team_best_goal_scorers(team_name):
 
     return players
 
-
 def get_team_best_assist_scorers(team_name):
     """
-    Récupère les trois meilleurs passeurs d'une équipe spécifique.
+    Récupère les 5 meilleurs passeurs d'une équipe spécifique.
 
     :param team_name: Code de l'équipe.
     :return: Liste des trois meilleurs passeurs.
@@ -140,7 +163,7 @@ def get_team_best_assist_scorers(team_name):
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT name, assists FROM players WHERE lower(team_code) = lower(?) ORDER BY assists DESC LIMIT 3
+        SELECT name, assists FROM players WHERE lower(team_code) = lower(?) AND active = 1 ORDER BY assists DESC LIMIT 5
     ''', (team_name,))
 
     players = cursor.fetchall()
@@ -158,8 +181,11 @@ def get_game_best_points_scorers(game):
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT name, team_code, points FROM players WHERE lower(team_code) = lower(?) OR lower(team_code) = lower(?) ORDER BY points DESC LIMIT 5
-    ''', (game.home, game.away,))
+        SELECT name, team_code, points FROM players 
+        WHERE active = 1 AND (lower(team_code) = lower(?) OR lower(team_code) = lower(?)) 
+        ORDER BY points DESC 
+        LIMIT 5
+    ''', (game.home, game.away))
 
     players = cursor.fetchall()
     conn.close()
@@ -170,15 +196,17 @@ def get_game_best_goal_scorers(game):
     """
     Récupère les 5 meilleurs buteurs des équipes jouant ce match.
 
-
     :return: Liste des 5 meilleurs buteurs.
     """
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT name, team_code, goals FROM players WHERE lower(team_code) = lower(?) OR lower(team_code) = lower(?) ORDER BY goals DESC LIMIT 5
-    ''', (game.home, game.away,))
+        SELECT name, team_code, goals FROM players 
+        WHERE active = 1 AND (lower(team_code) = lower(?) OR lower(team_code) = lower(?))
+        ORDER BY goals DESC 
+        LIMIT 5
+    ''', (game.home, game.away))
 
     players = cursor.fetchall()
     conn.close()
@@ -195,8 +223,11 @@ def get_game_best_assist_scorers(game):
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT name, team_code, assists FROM players WHERE lower(team_code) = lower(?) OR lower(team_code) = lower(?) ORDER BY assists DESC LIMIT 5
-    ''', (game.home, game.away,))
+        SELECT name, team_code, assists FROM players 
+        WHERE active = 1 AND (lower(team_code) = lower(?) OR lower(team_code) = lower(?))
+        ORDER BY assists DESC 
+        LIMIT 5
+    ''', (game.home, game.away))
 
     players = cursor.fetchall()
     conn.close()
@@ -214,7 +245,7 @@ def get_team_best_defensemen_points_scorers(team_name):
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT name, points FROM players WHERE lower(team_code) = lower(?) AND position = 'defenseman' ORDER BY points DESC LIMIT 3
+        SELECT name, points FROM players WHERE lower(team_code) = lower(?) AND position = 'defenseman' AND active = 1 ORDER BY points DESC LIMIT 3
     ''', (team_name,))
 
     players = cursor.fetchall()
@@ -233,7 +264,7 @@ def get_team_best_defensemen_goal_scorers(team_name):
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT name, goals FROM players WHERE lower(team_code) = lower(?) AND position = 'defenseman' ORDER BY goals DESC LIMIT 3
+        SELECT name, goals FROM players WHERE lower(team_code) = lower(?) AND position = 'defenseman' AND active = 1 ORDER BY goals DESC LIMIT 3
     ''', (team_name,))
 
     players = cursor.fetchall()
@@ -252,7 +283,7 @@ def get_team_best_defensemen_assist_scorers(team_name):
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT name, assists FROM players WHERE lower(team_code) = lower(?) AND position = 'defenseman' ORDER BY assists DESC LIMIT 3
+        SELECT name, assists FROM players WHERE lower(team_code) = lower(?) AND position = 'defenseman' AND active = 1 ORDER BY assists DESC LIMIT 3
     ''', (team_name,))
 
     players = cursor.fetchall()
@@ -270,8 +301,12 @@ def get_game_best_defensemen_points_scorers(game):
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT name, team_code, points FROM players WHERE (lower(team_code) = lower(?) OR lower(team_code) = lower(?)) AND position = 'defenseman' ORDER BY points DESC LIMIT 5
-    ''', (game.home, game.away,))
+        SELECT name, team_code, points FROM players 
+        WHERE active = 1 AND (lower(team_code) = lower(?) OR lower(team_code) = lower(?)) 
+        AND position = 'defenseman' 
+        ORDER BY points DESC 
+        LIMIT 5
+    ''', (game.home, game.away))
 
     players = cursor.fetchall()
     conn.close()
@@ -288,8 +323,12 @@ def get_game_best_defensemen_goal_scorers(game):
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT name, team_code, goals FROM players WHERE (lower(team_code) = lower(?) OR lower(team_code) = lower(?)) AND position = 'defenseman' ORDER BY goals DESC LIMIT 5
-    ''', (game.home, game.away,))
+        SELECT name, team_code, goals FROM players 
+        WHERE active = 1 AND (lower(team_code) = lower(?) OR lower(team_code) = lower(?)) 
+        AND position = 'defenseman' 
+        ORDER BY goals DESC 
+        LIMIT 5
+    ''', (game.home, game.away))
 
     players = cursor.fetchall()
     conn.close()
@@ -306,11 +345,14 @@ def get_game_best_defensemen_assist_scorers(game):
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT name, team_code, assists FROM players WHERE (lower(team_code) = lower(?) OR lower(team_code) = lower(?)) AND position = 'defenseman' ORDER BY assists DESC LIMIT 5
-    ''', (game.home, game.away,))
+        SELECT name, team_code, assists FROM players 
+        WHERE active = 1 AND (lower(team_code) = lower(?) OR lower(team_code) = lower(?)) 
+        AND position = 'defenseman' 
+        ORDER BY assists DESC 
+        LIMIT 5
+    ''', (game.home, game.away))
 
     players = cursor.fetchall()
     conn.close()
 
     return players
-
