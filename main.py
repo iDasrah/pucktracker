@@ -58,19 +58,19 @@ def handle_menu():
             team_name = input("Enter team code: ")
             players = get_team_best_points_scorers(team_name)
             for player in players:
-                print(f"{player[0]}: {player[1]} points")
+                print(f"{player[0]} - {player[1]} points")
             break
         elif option == "6":
             team_name = input("Enter team code: ")
             players = get_team_best_goal_scorers(team_name)
             for player in players:
-                print(f"{player[0]}: {player[1]} goals")
+                print(f"{player[0]} - {player[1]} buts")
             break
         elif option == "7":
             team_name = input("Enter team code: ")
             players = get_team_best_assist_scorers(team_name)
             for player in players:
-                print(f"{player[0]}: {player[1]} assists")
+                print(f"{player[0]} - {player[1]} passes")
             break
         elif option == "8":
             games = get_today_games()
@@ -84,7 +84,7 @@ def handle_menu():
             game_index = int(input("Enter game index: "))
             players = get_game_best_points_scorers(games[game_index])
             for player in players:
-                print(f"{player[0]} ({player[1]}): {player[2]} points")
+                print(f"{player[0]} ({player[1]}) - {player[2]} points")
             break
         elif option == "10":
             games = get_today_games()
@@ -93,7 +93,7 @@ def handle_menu():
             game_index = int(input("Enter game index: "))
             players = get_game_best_goal_scorers(games[game_index])
             for player in players:
-                print(f"{player[0]} ({player[1]}): {player[2]} goals")
+                print(f"{player[0]} ({player[1]}) - {player[2]} buts")
             break
         elif option == "11":
             games = get_today_games()
@@ -102,25 +102,25 @@ def handle_menu():
             game_index = int(input("Enter game index: "))
             players = get_game_best_assist_scorers(games[game_index])
             for player in players:
-                print(f"{player[0]} ({player[1]}): {player[2]} assists")
+                print(f"{player[0]} ({player[1]}) - {player[2]} passes")
             break
         elif option == "12":
             team_name = input("Enter team code: ")
             players = get_team_best_defensemen_points_scorers(team_name)
             for player in players:
-                print(f"{player[0]}: {player[1]} points")
+                print(f"{player[0]} - {player[1]} points")
             break
         elif option == "13":
             team_name = input("Enter team code: ")
             players = get_team_best_defensemen_goal_scorers(team_name)
             for player in players:
-                print(f"{player[0]}: {player[1]} goals")
+                print(f"{player[0]} - {player[1]} buts")
             break
         elif option == "14":
             team_name = input("Enter team code: ")
             players = get_team_best_defensemen_assist_scorers(team_name)
             for player in players:
-                print(f"{player[0]}: {player[1]} assists")
+                print(f"{player[0]} - {player[1]} passes")
             break
         elif option == "15":
             games = get_today_games()
@@ -129,7 +129,7 @@ def handle_menu():
             game_index = int(input("Enter game index: "))
             players = get_game_best_defensemen_points_scorers(games[game_index])
             for player in players:
-                print(f"{player[0]} ({player[1]}): {player[2]} points")
+                print(f"{player[0]} ({player[1]}) - {player[2]} points")
             break
         elif option == "16":
             games = get_today_games()
@@ -138,7 +138,7 @@ def handle_menu():
             game_index = int(input("Enter game index: "))
             players = get_game_best_defensemen_goal_scorers(games[game_index])
             for player in players:
-                print(f"{player[0]} ({player[1]}): {player[2]} goals")
+                print(f"{player[0]} ({player[1]}) - {player[2]} buts")
             break
         elif option == "17":
             games = get_today_games()
@@ -147,7 +147,7 @@ def handle_menu():
             game_index = int(input("Enter game index: "))
             players = get_game_best_defensemen_assist_scorers(games[game_index])
             for player in players:
-                print(f"{player[0]} ({player[1]}): {player[2]} assists")
+                print(f"{player[0]} ({player[1]}) - {player[2]} passes")
             break
         else:
             break
