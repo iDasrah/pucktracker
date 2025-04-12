@@ -8,6 +8,9 @@
     "start": "tsx src/index.ts",
     "dev": "tsx watch src/index.ts"
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iDasrah/pucktracker.git"
