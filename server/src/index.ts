@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(playerRouter);
+app.use(`${API_ROOT}/${API_VERSION}/players`,playerRouter);
 
 app.get(`${API_ROOT}/${API_VERSION}`, (req, res) => {
   res.json({

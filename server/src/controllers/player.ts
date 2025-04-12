@@ -27,14 +27,14 @@ export const getPlayerById = async (req: Request, res: Response) => {
 }
 
 export const createPlayer = async (req: Request, res: Response) => {
-    const { fullName, position, team } = req.body;
+    const { fullName, position, teamCode } = req.body;
     try {
         const player = await prisma.player.create({
             data: {
                 fullName,
                 position,
                 Team: {
-                    connect: { teamCode: team },
+                    connect: { teamCode: teamCode },
                 }
             },
         });

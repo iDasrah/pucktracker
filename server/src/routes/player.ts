@@ -11,13 +11,13 @@ import {
 
 const playerRouter = Router();
 
-playerRouter.get("/players", getAllPlayers);
-playerRouter.get("/players/:id", getPlayerById);
-playerRouter.get('/players/:id/stats', getPlayerStats);
+playerRouter.get("/", getAllPlayers);
+playerRouter.get("/:id", getPlayerById);
+playerRouter.get('/:id/stats', getPlayerStats);
 
-playerRouter.post("/players", createPlayer);
-playerRouter.patch("/players/:id", updatePlayer);
-playerRouter.delete("/players/:id", deletePlayer);
+playerRouter.post("/", createPlayer);
+playerRouter.patch("/:id", updatePlayer);
+playerRouter.delete("/:id", deletePlayer);
 
 
 export default playerRouter;
