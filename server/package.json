@@ -1,0 +1,30 @@
+{
+  "name": "pucktracker-api",
+  "version": "1.0.0",
+  "description": "An API for PuckTracker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iDasrah/pucktracker.git"
+  },
+  "keywords": [
+    "nhl",
+    "pucktracker",
+    "stats"
+  ],
+  "author": "Mathéo Picouleau",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iDasrah/pucktracker/issues"
+  },
+  "homepage": "https://github.com/iDasrah/pucktracker#readme",
+  "devDependencies": {
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  }
+}
