@@ -14,17 +14,16 @@ datasource db {
 }
 
 model Player {
-    id          String        @id @default(cuid())
+    id          Int           @id
     fullName    String
-    Team        Team?         @relation(fields: [teamId], references: [id])
+    team        Team?         @relation(fields: [teamId], references: [teamCode])
     teamId      String?
     position    String
     playerStats PlayerStats[]
 }
 
 model Team {
-    id        String   @id @default(cuid())
-    teamCode  String   @unique
+    teamCode  String   @id
     name      String
     players   Player[]
     awayGames Game[]   @relation("AwayTeam")
@@ -33,9 +32,9 @@ model Team {
 
 model Game {
     id         String   @id @default(cuid())
-    awayTeam   Team?    @relation("AwayTeam", fields: [awayTeamId], references: [id])
+    awayTeam   Team?    @relation("AwayTeam", fields: [awayTeamId], references: [teamCode])
     awayTeamId String?
-    homeTeam   Team?    @relation("HomeTeam", fields: [homeTeamId], references: [id])
+    homeTeam   Team?    @relation("HomeTeam", fields: [homeTeamId], references: [teamCode])
     homeTeamId String?
     date       DateTime
 }
@@ -43,7 +42,7 @@ model Game {
 model PlayerStats {
     id       String  @id @default(cuid())
     player   Player? @relation(fields: [playerId], references: [id])
-    playerId String?
+    playerId Int?
     goals    Int
     assists  Int
     points   Int
