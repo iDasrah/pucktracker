@@ -1,4 +1,4 @@
-import prisma from "../src/services/db";
+import prisma from "./db";
 
 const seedTeams = async () => {
     const data = await fetch("https://api.nhle.com/stats/rest/en/team");
