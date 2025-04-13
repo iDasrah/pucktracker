@@ -13,11 +13,16 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(`${API_ROOT}/${API_VERSION}/players`,playerRouter);
 app.use(`${API_ROOT}/${API_VERSION}/teams`, teamRouter);
-
-app.get(`${API_ROOT}/${API_VERSION}`, (req, res) => {
-  res.json({
-    message: "Hello World",
-  })
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Welcome to the PuckTracker's API",
+    version: API_VERSION,
+    api_root: API_ROOT,
+    routes: {
+        players: `${API_ROOT}/${API_VERSION}/players`,
+        teams: `${API_ROOT}/${API_VERSION}/teams`,
+    }
+  });
 });
 
 app.listen(PORT, () => {
