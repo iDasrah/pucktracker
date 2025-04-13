@@ -66,9 +66,9 @@ const seedPlayerStats = async () => {
             let points = 0;
 
             json.last5Games.forEach((game: { goals: number; assists: number; points: number; }) => {
-                goals = game.goals;
-                assists = game.assists;
-                points = game.points;
+                goals += game.goals;
+                assists += game.assists;
+                points += game.points;
             });
 
             const stats = {

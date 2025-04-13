@@ -40,9 +40,8 @@ model Game {
 }
 
 model PlayerStats {
-    id       String  @id @default(cuid())
     player   Player? @relation(fields: [playerId], references: [id])
-    playerId Int?
+    playerId Int     @id
     goals    Int
     assists  Int
     points   Int
