@@ -4,6 +4,7 @@ import env from "./config/env";
 import playerRouter from "./routes/player";
 import teamRouter from "./routes/team";
 import gameRouter from "./routes/game";
+import { Request, Response } from "express";
 
 export const app = express();
 const { PORT, API_ROOT, API_VERSION } = env;
@@ -16,7 +17,7 @@ app.use(`${API_ROOT}/${API_VERSION}/players`,playerRouter);
 app.use(`${API_ROOT}/${API_VERSION}/teams`, teamRouter);
 app.use(`${API_ROOT}/${API_VERSION}/games`, gameRouter);
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     message: "Welcome to the PuckTracker's API",
     version: API_VERSION,

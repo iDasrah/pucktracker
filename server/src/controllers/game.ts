@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import prisma from "../services/db";
+import {Player, PlayerStats } from "@prisma/client";
 
-export const getTodaysGames = async (req: Request, res: Response) => {
+export const getTodaysGames = async (_req: Request, res: Response) => {
     const today = new Date().toISOString().split('T')[0];
     const response = await fetch(`https://api-web.nhle.com/v1/schedule/${today}`);
     const { gameWeek } = await response.json();
@@ -21,8 +22,12 @@ export const getTodaysGames = async (req: Request, res: Response) => {
     res.status(200).json(gameData);
 };
 
-export const getTodaysGamesBestPlayers = async (req: Request, res: Response) => {
+export const getTodaysGamesBestPlayers = async (_req: Request, res: Response) => {
     const today = new Date().toISOString().split("T")[0];
+
+    type PlayerWithStats = Player & {
+        playerStats: PlayerStats | null;
+    };
 
     try {
         const response = await fetch(`https://api-web.nhle.com/v1/schedule/${today}`);
@@ -47,13 +52,13 @@ export const getTodaysGamesBestPlayers = async (req: Request, res: Response) => 
             ]);
 
             const topHome = homePlayers
-                .filter(p => p.playerStats)
-                .sort((a, b) => (b.playerStats!.points ?? 0) - (a.playerStats!.points ?? 0))
+                .filter((p: PlayerWithStats) => p.playerStats)
+                .sort((a: PlayerWithStats, b: PlayerWithStats) => (b.playerStats!.points ?? 0) - (a.playerStats!.points ?? 0))
                 .slice(0, 3);
 
             const topAway = awayPlayers
-                .filter(p => p.playerStats)
-                .sort((a, b) => (b.playerStats!.points ?? 0) - (a.playerStats!.points ?? 0))
+                .filter((p: PlayerWithStats) => p.playerStats)
+                .sort((a: PlayerWithStats, b: PlayerWithStats) => (b.playerStats!.points ?? 0) - (a.playerStats!.points ?? 0))
                 .slice(0, 3);
 
             results.push({
@@ -66,7 +71,7 @@ export const getTodaysGamesBestPlayers = async (req: Request, res: Response) => 
                     teamCode: awayTeamCode,
                 },
                 bestPlayers: {
-                    home: topHome.map(p => ({
+                    home: topHome.map((p: PlayerWithStats) => ({
                         id: p.id,
                         fullName: p.fullName,
                         position: p.position,
@@ -74,7 +79,7 @@ export const getTodaysGamesBestPlayers = async (req: Request, res: Response) => 
                         goals: p.playerStats!.goals,
                         assists: p.playerStats!.assists,
                     })),
-                    away: topAway.map(p => ({
+                    away: topAway.map((p: PlayerWithStats) => ({
                         id: p.id,
                         fullName: p.fullName,
                         position: p.position,
