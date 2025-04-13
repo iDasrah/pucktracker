@@ -7,6 +7,7 @@ export const getTodaysGames = async (req: Request, res: Response) => {
     const { gameWeek } = await response.json();
 
     const gameData = gameWeek[0].games.map((game: any) => ({
+        gameId: game.id,
         homeTeam: {
             fullName: `${game.homeTeam.placeName.default} ${game.homeTeam.commonName.default}`,
             teamCode: game.homeTeam.abbrev,
@@ -89,5 +90,70 @@ export const getTodaysGamesBestPlayers = async (req: Request, res: Response) => 
     } catch (error) {
         console.error("Erreur dans getTodaysGamesBestPlayers:", error);
         res.status(500).json({ error: "Erreur interne du serveur" });
+    }
+}
+
+export const getGameBestPlayers = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    try {
+        const response = await fetch(`https://api-web.nhle.com/v1/gamecenter/${id}/landing`);
+        const { homeTeam, awayTeam } = await response.json();
+
+        const homeTeamCode = homeTeam.abbrev;
+        const awayTeamCode = awayTeam.abbrev;
+
+        const [homePlayers, awayPlayers] = await Promise.all([
+            prisma.player.findMany({
+                where: { teamId: homeTeamCode },
+                include: { playerStats: true },
+            }),
+            prisma.player.findMany({
+                where: { teamId: awayTeamCode },
+                include: { playerStats: true },
+            }),
+        ]);
+
+        const topHome = homePlayers
+            .filter(p => p.playerStats)
+            .sort((a, b) => (b.playerStats!.points ?? 0) - (a.playerStats!.points ?? 0))
+            .slice(0, 3);
+        const topAway = awayPlayers
+            .filter(p => p.playerStats)
+            .sort((a, b) => (b.playerStats!.points ?? 0) - (a.playerStats!.points ?? 0))
+            .slice(0, 3);
+
+        const result = {
+            homeTeam: {
+                fullName: `${homeTeam.placeName.default} ${homeTeam.commonName.default}`,
+                teamCode: homeTeamCode,
+            },
+            awayTeam: {
+                fullName: `${awayTeam.placeName.default} ${awayTeam.commonName.default}`,
+                teamCode: awayTeamCode,
+            },
+            bestPlayers: {
+                home: topHome.map(p => ({
+                    id: p.id,
+                    fullName: p.fullName,
+                    position: p.position,
+                    points: p.playerStats!.points,
+                    goals: p.playerStats!.goals,
+                    assists: p.playerStats!.assists,
+                })),
+                away: topAway.map(p => ({
+                    id: p.id,
+                    fullName: p.fullName,
+                    position: p.position,
+                    points: p.playerStats!.points,
+                    goals: p.playerStats!.goals,
+                    assists: p.playerStats!.assists,
+                })),
+            },
+        }
+        res.status(200).json(result);
+    } catch (error) {
+        console.error("Erreur dans getGameBestPlayers:", error);
+        res.status(500).json({ error: "Erreur interne du serveur," + error });
     }
 }
