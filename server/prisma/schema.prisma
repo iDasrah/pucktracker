@@ -14,12 +14,13 @@ datasource db {
 }
 
 model Player {
-    id          Int           @id
-    fullName    String
-    team        Team?         @relation(fields: [teamId], references: [teamCode])
-    teamId      String?
-    position    String
-    playerStats PlayerStats[]
+    id       Int     @id
+    fullName String
+    team     Team?   @relation(fields: [teamId], references: [teamCode])
+    teamId   String?
+    position String
+
+    playerStats PlayerStats?
 }
 
 model Team {
@@ -29,8 +30,8 @@ model Team {
 }
 
 model PlayerStats {
-    player   Player? @relation(fields: [playerId], references: [id])
-    playerId Int     @id
+    player   Player @relation(fields: [playerId], references: [id])
+    playerId Int    @id
     goals    Int
     assists  Int
     points   Int
