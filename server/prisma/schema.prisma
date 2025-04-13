@@ -23,20 +23,9 @@ model Player {
 }
 
 model Team {
-    teamCode  String   @id
-    name      String
-    players   Player[]
-    awayGames Game[]   @relation("AwayTeam")
-    homeGames Game[]   @relation("HomeTeam")
-}
-
-model Game {
-    id         String   @id @default(cuid())
-    awayTeam   Team?    @relation("AwayTeam", fields: [awayTeamId], references: [teamCode])
-    awayTeamId String?
-    homeTeam   Team?    @relation("HomeTeam", fields: [homeTeamId], references: [teamCode])
-    homeTeamId String?
-    date       DateTime
+    teamCode String   @id
+    name     String
+    players  Player[]
 }
 
 model PlayerStats {
