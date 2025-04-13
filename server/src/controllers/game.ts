@@ -101,6 +101,10 @@ export const getTodaysGamesBestPlayers = async (_req: Request, res: Response) =>
 export const getGameBestPlayers = async (req: Request, res: Response) => {
     const { id } = req.params;
 
+    type PlayerWithStats = Player & {
+        playerStats: PlayerStats | null;
+    };
+
     try {
         const response = await fetch(`https://api-web.nhle.com/v1/gamecenter/${id}/landing`);
         const { homeTeam, awayTeam } = await response.json();
@@ -120,12 +124,12 @@ export const getGameBestPlayers = async (req: Request, res: Response) => {
         ]);
 
         const topHome = homePlayers
-            .filter(p => p.playerStats)
-            .sort((a, b) => (b.playerStats!.points ?? 0) - (a.playerStats!.points ?? 0))
+            .filter((p: PlayerWithStats) => p.playerStats)
+            .sort((a: PlayerWithStats, b: PlayerWithStats) => (b.playerStats!.points ?? 0) - (a.playerStats!.points ?? 0))
             .slice(0, 3);
         const topAway = awayPlayers
-            .filter(p => p.playerStats)
-            .sort((a, b) => (b.playerStats!.points ?? 0) - (a.playerStats!.points ?? 0))
+            .filter((p: PlayerWithStats) => p.playerStats)
+            .sort((a: PlayerWithStats, b: PlayerWithStats) => (b.playerStats!.points ?? 0) - (a.playerStats!.points ?? 0))
             .slice(0, 3);
 
         const result = {
@@ -138,7 +142,7 @@ export const getGameBestPlayers = async (req: Request, res: Response) => {
                 teamCode: awayTeamCode,
             },
             bestPlayers: {
-                home: topHome.map(p => ({
+                home: topHome.map((p: PlayerWithStats) => ({
                     id: p.id,
                     fullName: p.fullName,
                     position: p.position,
@@ -146,7 +150,7 @@ export const getGameBestPlayers = async (req: Request, res: Response) => {
                     goals: p.playerStats!.goals,
                     assists: p.playerStats!.assists,
                 })),
-                away: topAway.map(p => ({
+                away: topAway.map((p: PlayerWithStats) => ({
                     id: p.id,
                     fullName: p.fullName,
                     position: p.position,
