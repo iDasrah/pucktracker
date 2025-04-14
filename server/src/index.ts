@@ -4,6 +4,7 @@ import env from "./config/env";
 import playerRouter from "./routes/player";
 import teamRouter from "./routes/team";
 import gameRouter from "./routes/game";
+import cronRouter from "./routes/cron";
 import { Request, Response } from "express";
 
 export const app = express();
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(`${API_ROOT}/${API_VERSION}/players`,playerRouter);
 app.use(`${API_ROOT}/${API_VERSION}/teams`, teamRouter);
 app.use(`${API_ROOT}/${API_VERSION}/games`, gameRouter);
+app.use(`${API_ROOT}/${API_VERSION}/cron`, cronRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
