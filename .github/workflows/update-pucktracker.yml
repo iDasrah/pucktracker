@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Requête à /update
+      - name: Trigger secure update
         run: |
-          curl -X POST https://ton-api-pucktracker.onrender.com/api/v1/update
+          curl -X POST https://pucktracker.onrender.com/api/v1/cron/update \
+            -H "Authorization: Bearer ${{ secrets.PUCK_API_SECRET }}"
