@@ -1,0 +1,15 @@
+name: Daily PuckTracker Update
+
+on:
+  schedule:
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-daily:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Requête à /update
+        run: |
+          curl -X POST https://ton-api-pucktracker.onrender.com/api/v1/update
