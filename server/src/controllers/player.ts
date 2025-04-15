@@ -1,5 +1,6 @@
 import prisma from "../services/db";
 import { Request, Response } from "express";
+import {Prisma} from "@prisma/client";
 
 export const getAllPlayers = async (req: Request, res: Response) => {
     try {
@@ -12,9 +13,17 @@ export const getAllPlayers = async (req: Request, res: Response) => {
 
 export const getPlayerById = async (req: Request, res: Response) => {
     const { id } = req.params;
+    const include: Prisma.PlayerInclude = {}
+    const { includeStats } = req.query;
+
+    if (includeStats) {
+        include.playerStats = true;
+    }
+
     try {
         const player = await prisma.player.findUnique({
             where: { id: Number(id) },
+            include
         });
         if (!player) {
             res.status(404).json({ error: "Player not found" });
