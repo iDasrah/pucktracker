@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {Team} from "../types.ts";
 import {getAllTeams} from "../api.ts";
 import {useDebounce} from "../hooks/useDebounce.ts";
+import {Link} from "react-router";
 
 const Teams = () => {
     const [teams, setTeams] = useState<Team[]>([])
@@ -34,6 +35,7 @@ const Teams = () => {
                         <div key={team.teamCode} className="min-w-full rounded-lg p-4 flex flex-col gap-2 justify-center items-center bg-dark md:min-w-85">
                             <h5 className="font-semibold">{team.name}</h5>
                             <p className="text-gray-200">Abbréviation: {team.teamCode}</p>
+                            <Link className="bg-accent w-full text-center rounded-lg text-dark hover:bg-accent/90 p-2" to={`/teams/${team.teamCode}`}>Détails</Link>
                         </div>
                     ))}
                 </div>
