@@ -1,6 +1,6 @@
-import {Game, Player} from "../types.ts";
+import {Game, PlayerWithStats} from "../types.ts";
 import {useEffect, useState} from "react";
-import {useParams} from "react-router";
+import {Link, useParams} from "react-router";
 import {getGameDetails} from "../api.ts";
 
 const GameDetails = () => {
@@ -8,8 +8,12 @@ const GameDetails = () => {
     const [gameDetails, setGameDetails] = useState<Game | null>(null);
 
     const fetchGameDetails = async () => {
-        const data = await getGameDetails(Number(gameId));
-        setGameDetails(data);
+        try {
+            const data = await getGameDetails(Number(gameId));
+            setGameDetails(data);
+        } catch (error) {
+            console.error("Error fetching game details:", error);
+        }
     };
 
     useEffect(() => {
@@ -23,20 +27,20 @@ const GameDetails = () => {
                     {gameDetails?.homeTeam.fullName} vs {gameDetails?.awayTeam.fullName}
                 </h2>
                 <div className="w-full flex flex-col gap-2 justify-center items-center md:flex-row md:justify-between">
-                    <div className="game-details-card">
-                        <h3 className="game-details-card-team-name">Meilleurs joueurs de {gameDetails?.homeTeam.fullName}</h3>
-                        {gameDetails?.bestPlayers?.home.map((player: Player) => (
-                            <div key={player.id} className="text-gray-200">
+                    <div className="details-card">
+                        <h3 className="details-card-team-name">Meilleurs joueurs de {gameDetails?.homeTeam.fullName}</h3>
+                        {gameDetails?.bestPlayers?.home.map((player: PlayerWithStats) => (
+                            <Link to={`/players/${player.id}`} key={player.id} className="text-gray-200">
                                 {player.fullName} - {player.points} points ({player.goals} G, {player.assists} A)
-                            </div>
+                            </Link>
                         ))}
                     </div>
-                    <div className="game-details-card">
-                        <h3 className="game-details-card-team-name">Meilleurs joueurs de {gameDetails?.awayTeam.fullName}</h3>
-                        {gameDetails?.bestPlayers?.away.map((player: Player) => (
-                            <div key={player.id} className="text-gray-200">
+                    <div className="details-card">
+                        <h3 className="details-card-team-name">Meilleurs joueurs de {gameDetails?.awayTeam.fullName}</h3>
+                        {gameDetails?.bestPlayers?.away.map((player: PlayerWithStats) => (
+                            <Link to={`/players/${player.id}`} key={player.id} className="text-gray-200">
                                 {player.fullName} - {player.points} points ({player.goals} G, {player.assists} A)
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 </div>

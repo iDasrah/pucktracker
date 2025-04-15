@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {PlayerStatsWithPlayer} from "../types.ts";
 import {getBestPlayers} from "../api.ts";
+import {Link} from "react-router";
 
 enum Filter {
     POINTS = "points",
@@ -52,6 +53,7 @@ const Players = () => {
                             <p className="text-gray-200">Points: {player.points}</p>
                             <p className="text-gray-200">Buts: {player.goals}</p>
                             <p className="text-gray-200">Passes décisives: {player.assists}</p>
+                            <Link className="bg-accent w-full text-center rounded-lg text-dark hover:bg-accent/90 p-2" to={`/players/${player.playerId}`}>Détails</Link>
                         </div>
                     ))}
                 </div>
