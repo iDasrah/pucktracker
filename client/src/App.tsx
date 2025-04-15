@@ -18,7 +18,7 @@ const App = () => {
 
     return (
         <>
-            <h2 className="text-xl text-center font-semibold">
+            <h2 className="text-xl text-center font-semibold md:text-2xl">
                 Les matchs du jour
             </h2>
             <GameList games={todayGames} />

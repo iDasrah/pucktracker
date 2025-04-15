@@ -34,7 +34,7 @@ const Players = () => {
     return (
         <>
             <div className="flex flex-col gap-4">
-                <h3 className="text-xl text-center font-semibold">Les meilleurs joueurs du moment</h3>
+                <h3 className="text-xl text-center font-semibold md:text-2xl">Les meilleurs joueurs du moment</h3>
                 <div className="flex flex-col w-full gap-2 md:flex-row md:justify-center md:items-center">
                     <h4 className="text-lg">Filtrer par</h4>
                     <select className="border rounded-lg p-1" value={filter} onChange={handleFilterChange}>
