@@ -14,6 +14,11 @@ export type Game = {
     };
 }
 
+export type Team = {
+    teamCode: string;
+    name: string;
+}
+
 export type Player = {
     id: number;
     fullName: string;
