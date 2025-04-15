@@ -10,7 +10,7 @@ const GameList = ({ games }: GameListProps) => {
         <>
             <div className="flex flex-col gap-2 justify-center items-center md:flex-row md:flex-wrap md:justify-start md:gap-4">
                 {games.map((game) => (
-                    <div key={game.gameId} className="min-w-full rounded-lg p-4 flex flex-col gap-2 justify-center items-center bg-dark">
+                    <div key={game.gameId} className="min-w-full rounded-lg p-4 flex flex-col gap-2 justify-center items-center bg-dark md:min-w-115">
                         <Link to={`game/${game.gameId}`} className="text-center">{game.homeTeam.fullName} vs {game.awayTeam.fullName}</Link>
                     </div>
                 ))}

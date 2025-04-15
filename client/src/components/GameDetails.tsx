@@ -19,7 +19,7 @@ const GameDetails = () => {
     return (
         <>
             <div className="flex flex-col gap-4">
-                <h2 className="text-xl text-center font-semibold">
+                <h2 className="text-xl text-center font-semibold md:text-2xl">
                     {gameDetails?.homeTeam.fullName} vs {gameDetails?.awayTeam.fullName}
                 </h2>
                 <div className="w-full flex flex-col gap-2 justify-center items-center md:flex-row md:justify-between">
