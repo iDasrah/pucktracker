@@ -35,7 +35,7 @@ const Players = () => {
         <>
             <div className="flex flex-col gap-4">
                 <h3 className="text-xl text-center font-semibold">Les meilleurs joueurs du moment</h3>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col w-full gap-2 md:flex-row md:justify-center md:items-center">
                     <h4 className="text-lg">Filtrer par</h4>
                     <select className="border rounded-lg p-1" value={filter} onChange={handleFilterChange}>
                         <option value={Filter.POINTS}>Points</option>
@@ -45,9 +45,9 @@ const Players = () => {
                     <label htmlFor="limit">Limite</label>
                     <input className="border rounded-lg p-1" name="limit" id="limit" type="number" value={take} onChange={(e) => setTake(Number(e.target.value))} />
                 </div>
-                <div className="flex flex-col gap-2 justify-center items-center">
+                <div className="flex flex-col gap-2 justify-center items-center md:flex-row md:justify-start md:flex-wrap md:gap-4">
                     {bestPlayers.map((player) => (
-                        <div key={player.playerId} className="w-full rounded-lg p-4 flex flex-col gap-2 justify-center items-center bg-dark">
+                        <div key={player.playerId} className="min-w-full rounded-lg p-4 flex flex-col gap-2 justify-center items-center bg-dark md:min-w-85">
                             <h5 className="font-semibold">{player.player.fullName}</h5>
                             <p className="text-gray-200">Points: {player.points}</p>
                             <p className="text-gray-200">Buts: {player.goals}</p>

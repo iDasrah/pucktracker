@@ -22,7 +22,7 @@ const GameDetails = () => {
                 <h2 className="text-xl text-center font-semibold">
                     {gameDetails?.homeTeam.fullName} vs {gameDetails?.awayTeam.fullName}
                 </h2>
-                <div className="w-full flex flex-col gap-2 justify-center items-center">
+                <div className="w-full flex flex-col gap-2 justify-center items-center md:flex-row md:justify-between">
                     <div className="game-details-card">
                         <h3 className="game-details-card-team-name">Meilleurs joueurs de {gameDetails?.homeTeam.fullName}</h3>
                         {gameDetails?.bestPlayers?.home.map((player: Player) => (
