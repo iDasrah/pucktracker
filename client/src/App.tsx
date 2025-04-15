@@ -1,16 +1,14 @@
 import GameList from "./components/GameList.tsx";
 import {Game} from "./types.ts";
 import {useEffect, useState} from "react";
+import {getTodayGames} from "./api.ts";
 
 
 const App = () => {
     const [todayGames, setTodayGames] = useState<Game[]>([]);
 
     const fetchGames = async () => {
-        const url = import.meta.env.VITE_API_BASEURL + "/games/today";
-        const response = await fetch(url);
-        const data = await response.json();
-
+        const data = await getTodayGames();
         setTodayGames(data);
     };
 
