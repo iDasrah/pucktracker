@@ -30,9 +30,17 @@ export const getAllTeams = async (req: Request, res: Response) => {
 
 export const getTeamById = async (req: Request, res: Response) => {
     const { id } = req.params;
+    const include: Prisma.TeamInclude = {};
+    const { includePlayers } = req.query;
+
+    if (includePlayers) {
+        include.players = true;
+    }
+
     try {
         const team = await prisma.team.findUnique({
             where: { teamCode: id },
+            include
         });
         if (!team) {
             res.status(404).json({ error: "Team not found" });
