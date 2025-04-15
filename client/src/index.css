@@ -1,1 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
+
+@theme {
+    --color-primary: #134074;
+    --color-secondary: #13315C;
+    --color-dark: #0B2545;
+    --color-accent: #8DA9C4;
+    --color-light: #EEF4ED;
+    --font-logo: 'Exo 2', sans-serif;
+}
+
+@layer components {
+    .nav-item {
+        @apply text-lg font-medium text-white hover:text-gray-300 transition-colors duration-200;
+    }
+
+    .active {
+        @apply text-accent;
+    }
+}
