@@ -10,7 +10,7 @@
     "build": "tsc"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx src/services/seed.ts",
   },
   "repository": {
     "type": "git",
