@@ -14,8 +14,6 @@ export const getTodayGames = async () => {
 export const getGameDetails = async (gameId: number) => {
     try {
         const url = `${API_URL}/games/${gameId}/bestplayers`;
-        console.log(url);
-
         const response = await fetch(url);
         return await response.json();
     } catch (error) {
@@ -35,6 +33,17 @@ export const getBestPlayers = async (filter: string, take: number) => {
     }
 }
 
+export const getPlayer = async (playerId: number) => {
+    try {
+        const url = `${API_URL}/players/${playerId}?includeStats=true`;
+        const response = await fetch(url);
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching player:", error);
+        throw error;
+    }
+}
+
 export const getAllTeams = async (name: string) => {
     let url = `${API_URL}/teams`;
 
@@ -47,6 +56,17 @@ export const getAllTeams = async (name: string) => {
         return await response.json();
     } catch (error) {
         console.error("Error fetching all teams:", error);
+        throw error;
+    }
+}
+
+export const getTeam = async (teamCode: string) => {
+    try {
+        const url = `${API_URL}/teams/${teamCode}?includePlayers=true`;
+        const response = await fetch(url);
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching team:", error);
         throw error;
     }
 }

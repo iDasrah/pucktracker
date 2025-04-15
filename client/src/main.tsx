@@ -8,6 +8,8 @@ import GameDetails from "./components/GameDetails.tsx";
 import Teams from "./components/Teams.tsx";
 import Players from "./components/Players.tsx";
 import Games from "./components/Games.tsx";
+import Team from "./components/Team.tsx";
+import Player from "./components/Player.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -19,8 +21,10 @@ createRoot(document.getElementById('root')!).render(
                           <Route path="/" element={<App />} />
                           <Route path="/game/:id" element={<GameDetails />} />
                           <Route path="/teams" element={<Teams />} />
-                            <Route path="/players" element={<Players />} />
-                            <Route path="/games" element={<Games />} />
+                          <Route path="/teams/:teamCode" element={<Team />} />
+                          <Route path="/players" element={<Players />} />
+                          <Route path="/players/:playerId" element={<Player />} />
+                          <Route path="/games" element={<Games />} />
                       </Routes>
               </main>
           </BrowserRouter>

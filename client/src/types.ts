@@ -9,17 +9,30 @@ export type Game = {
         teamCode: string;
     };
     bestPlayers?: {
-        home: Player[];
-        away: Player[];
+        home: PlayerWithStats[];
+        away: PlayerWithStats[];
     };
 }
 
 export type Team = {
     teamCode: string;
     name: string;
+    players?: Player[];
 }
 
 export type Player = {
+    id: number;
+    fullName: string;
+    teamId: string;
+    position: string;
+    playerStats?: {
+        points: number;
+        goals: number;
+        assists: number;
+    }
+}
+
+export type PlayerWithStats = {
     id: number;
     fullName: string;
     teamCode: string;
