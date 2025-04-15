@@ -1,17 +1,14 @@
 import {Game, Player} from "../types.ts";
 import {useEffect, useState} from "react";
 import {useParams} from "react-router";
+import {getGameDetails} from "../api.ts";
 
 const GameDetails = () => {
     const { id: gameId } = useParams<{ id: string }>();
     const [gameDetails, setGameDetails] = useState<Game | null>(null);
 
     const fetchGameDetails = async () => {
-        const url = import.meta.env.VITE_API_BASEURL + `/games/${gameId}/bestplayers`;
-
-        const response = await fetch(url);
-        const data = await response.json();
-
+        const data = await getGameDetails(Number(gameId));
         setGameDetails(data);
     };
 
@@ -30,7 +27,7 @@ const GameDetails = () => {
                         <h3 className="text-xl text-white">Meilleurs joueurs de {gameDetails?.homeTeam.fullName}</h3>
                         {gameDetails?.bestPlayers?.home.map((player: Player) => (
                             <div key={player.id} className="text-white">
-                                {player.fullName} - {player.points} points
+                                {player.fullName} - {player.points} points ({player.goals} G, {player.assists} A)
                             </div>
                         ))}
                     </div>
@@ -38,7 +35,7 @@ const GameDetails = () => {
                         <h3 className="text-xl text-white">Meilleurs joueurs de {gameDetails?.awayTeam.fullName}</h3>
                         {gameDetails?.bestPlayers?.away.map((player: Player) => (
                             <div key={player.id} className="text-white">
-                                {player.fullName} - {player.points} points
+                                {player.fullName} - {player.points} points ({player.goals} G, {player.assists} A)
                             </div>
                         ))}
                     </div>
