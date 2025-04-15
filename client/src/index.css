@@ -12,7 +12,7 @@
 
 @layer components {
     .nav-item {
-        @apply text-sm p-2 rounded-lg;
+        @apply text-sm rounded-lg md:text-base md:hover:text-gray-300;
     }
 
     .game-details-card {

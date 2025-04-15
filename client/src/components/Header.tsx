@@ -7,14 +7,15 @@ const Header = () => {
         const menu = document.querySelector(".menu");
         if (menu) {
             menu.classList.toggle("hidden");
+            menu.classList.toggle("flex");
         }
     }
 
     return (
         <>
-            <header className="bg-secondary text-white">
-                <div className="flex justify-around items-center">
-                    <Menu onClick={handleMenuClick} className="size-8 sm:hidden md:hidden lg:hidden xl:hidden 2xl:hidden" />
+            <header className="bg-secondary text-white md:flex md:justify-between md:items-center">
+                <div className="flex justify-around items-center md:justify-start">
+                    <Menu onClick={handleMenuClick} className="size-8 md:hidden lg:hidden xl:hidden 2xl:hidden" />
                     <Link to="/">
                         <div className="flex justify-center items-center">
                             <img src={logo} className="size-26" alt="Logo PuckTracker" />
@@ -22,8 +23,8 @@ const Header = () => {
                         </div>
                     </Link>
                 </div>
-                <nav className="">
-                    <ul className="menu hidden w-full flex flex-col items-center justify-center">
+                <nav className="md:pr-4">
+                    <ul className="menu hidden w-full flex-col items-center pb-4 justify-center gap-4 md:pb-0 md:justify-end md:flex md:flex-row">
                         <li className="nav-item">
                             <NavLink to="/teams">
                                 Equipes
