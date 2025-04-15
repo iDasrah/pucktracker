@@ -34,3 +34,19 @@ export const getBestPlayers = async (filter: string, take: number) => {
         throw error;
     }
 }
+
+export const getAllTeams = async (name: string) => {
+    let url = `${API_URL}/teams`;
+
+    if (name) {
+        url += `?name=${name}`;
+    }
+
+    try {
+        const response = await fetch(url);
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching all teams:", error);
+        throw error;
+    }
+}
