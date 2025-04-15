@@ -11,10 +11,10 @@ import Games from "./components/Games.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-      <div className="min-h-screen w-screen flex flex-col bg-primary">
+      <div className="min-h-screen bg-primary flex flex-col gap-2">
           <BrowserRouter>
               <Header />
-              <main className="p-4">
+              <main className="text-white flex flex-col gap-2 p-4">
                       <Routes>
                           <Route path="/" element={<App />} />
                           <Route path="/game/:id" element={<GameDetails />} />
