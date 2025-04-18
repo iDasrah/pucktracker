@@ -29,13 +29,13 @@ export class PlayersController {
         includeStats?: boolean,
         @Query('position') position?: string,
         @Query('filter') filter?: 'points' | 'goals' | 'assists',
-        @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
+        @Query('limit', new DefaultValuePipe(10), ParseIntPipe) take?: number,
     ) {
         return this.playerService.getBestPlayers(
             includeStats,
             position,
             filter,
-            limit,
+            take,
         );
     }
 
