@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PlayersService {
-    getAllPlayers(includeStats?: boolean, name?: string, position?: string) {
+    async getAllPlayers(includeStats?: boolean, name?: string, position?: string) {
         const include: Prisma.PlayerInclude = {};
         const where: Prisma.PlayerWhereInput = {};
 
@@ -26,26 +26,26 @@ export class PlayersService {
             };
         }
 
-        return prisma.player.findMany({
+        return await prisma.player.findMany({
             include,
             where,
         });
     }
 
-    getOnePlayer(id: number, includeStats?: boolean) {
+    async getOnePlayer(id: number, includeStats?: boolean) {
         const include: Prisma.PlayerInclude = {};
 
         if (includeStats) {
             include.playerStats = true;
         }
 
-        return prisma.player.findUnique({
+        return await prisma.player.findUnique({
             where: { id },
             include,
         });
     }
 
-    getBestPlayers(includeStats?: boolean, position?: string, filter: string = 'points', limit?: number) {
+    async getBestPlayers(includeStats?: boolean, position?: string, filter: string = 'points', take?: number) {
         const include: Prisma.PlayerInclude = {};
         const where: Prisma.PlayerWhereInput = {};
 
@@ -64,7 +64,7 @@ export class PlayersService {
             };
         }
 
-        return prisma.player.findMany({
+        return await prisma.player.findMany({
             include,
             where,
             orderBy: {
@@ -72,7 +72,7 @@ export class PlayersService {
                     [filter]: 'desc',
                 },
             },
-            take: limit,
+            take: take,
         });
     }
 }
