@@ -32,7 +32,7 @@ export class PlayersService {
         });
     }
 
-    getOnePlayer(id: number, includeStats: boolean) {
+    getOnePlayer(id: number, includeStats?: boolean) {
         const include: Prisma.PlayerInclude = {};
 
         if (includeStats) {
@@ -42,6 +42,37 @@ export class PlayersService {
         return prisma.player.findUnique({
             where: { id },
             include,
+        });
+    }
+
+    getBestPlayers(includeStats?: boolean, position?: string, filter: string = 'points', limit?: number) {
+        const include: Prisma.PlayerInclude = {};
+        const where: Prisma.PlayerWhereInput = {};
+
+        if (includeStats) {
+            include.playerStats = true;
+
+            where.playerStats = {
+                isNot: null
+            };
+        }
+
+        if (position) {
+            where.position = {
+                contains: position,
+                mode: 'insensitive',
+            };
+        }
+
+        return prisma.player.findMany({
+            include,
+            where,
+            orderBy: {
+                playerStats: {
+                    [filter]: 'desc',
+                },
+            },
+            take: limit,
         });
     }
 }
