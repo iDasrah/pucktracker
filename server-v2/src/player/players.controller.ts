@@ -23,10 +23,26 @@ export class PlayersController {
         return this.playerService.getAllPlayers(includeStats, name, position);
     }
 
+    @Get('best')
+    getBestPlayers(
+        @Query('includeStats', new DefaultValuePipe(false), ParseBoolPipe)
+        includeStats?: boolean,
+        @Query('position') position?: string,
+        @Query('filter') filter?: 'points' | 'goals' | 'assists',
+        @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
+    ) {
+        return this.playerService.getBestPlayers(
+            includeStats,
+            position,
+            filter,
+            limit,
+        );
+    }
+
     @Get(':id')
     getOnePlayer(
         @Param('id', ParseIntPipe) id: number,
-        @Query('includeStats', ParseBoolPipe) includeStats: boolean,
+        @Query('includeStats', new DefaultValuePipe(false), ParseBoolPipe) includeStats?: boolean,
     ) {
         return this.playerService.getOnePlayer(id, includeStats);
     }
