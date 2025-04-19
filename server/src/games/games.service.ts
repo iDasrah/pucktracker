@@ -42,64 +42,12 @@ export class GamesService {
         const homeTeamCode = homeTeam.abbrev;
         const awayTeamCode = awayTeam.abbrev;
 
-        const [homePlayers, awayPlayers] = await Promise.all([
-            prisma.player.findMany({
-                where: { teamId: homeTeamCode, ...where },
-                include: {
-                    playerStats: true,
-                },
-            }),
-            prisma.player.findMany({
-                where: { teamId: awayTeamCode, ...where },
-                include: {
-                    playerStats: true,
-                },
-            }),
-        ]);
-
-        const topHome = homePlayers
-            .filter((p) => p.playerStats)
-            .sort((a, b) => (b.playerStats![filter] ?? 0) - (a.playerStats![filter] ?? 0))
-            .slice(0, take ?? 3)
-            .map((p) => ({
-                id: p.id,
-                fullName: p.fullName,
-                position: p.position,
-                playersStats: {
-                    points: p.playerStats!.points,
-                    goals: p.playerStats!.goals,
-                    assists: p.playerStats!.assists,
-                },
-            }));
-
-        const topAway = awayPlayers
-            .filter((p) => p.playerStats)
-            .sort((a, b) => (b.playerStats![filter] ?? 0) - (a.playerStats![filter] ?? 0))
-            .slice(0, take ?? 3)
-            .map((p) => ({
-                id: p.id,
-                fullName: p.fullName,
-                position: p.position,
-                playersStats: {
-                    points: p.playerStats!.points,
-                    goals: p.playerStats!.goals,
-                    assists: p.playerStats!.assists,
-                },
-            }));
+        const homeBestPlayers = await this.teamsService.getBestPlayers(homeTeamCode, true, position, filter, take);
+        const awayBestPlayers = await this.teamsService.getBestPlayers(awayTeamCode, true, position, filter, take);
 
         return {
-            homeTeam: {
-                fullName: `${homeTeam.placeName.default} ${homeTeam.commonName.default}`,
-                teamCode: homeTeamCode,
-            },
-            awayTeam: {
-                fullName: `${awayTeam.placeName.default} ${awayTeam.commonName.default}`,
-                teamCode: awayTeamCode,
-            },
-            bestPlayers: {
-                home: topHome,
-                away: topAway,
-            },
+            homeTeam: homeBestPlayers,
+            awayTeam: awayBestPlayers,
         };
     }
 }

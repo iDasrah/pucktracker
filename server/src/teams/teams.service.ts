@@ -53,11 +53,77 @@ export class TeamsService {
         });
     }
 
-    async getOneTeam(id: string) {
+    async getOneTeam(id: string, includePlayers?: boolean) {
+        const include: Prisma.TeamInclude = {}
+
+        if (includePlayers) {
+            include.players = true;
+        }
+
         return prisma.team.findUnique({
             where: {
                 teamCode: id.toUpperCase(),
             },
+            include,
         });
+    }
+
+    async getBestPlayers(id: string, includeStats?: boolean, position?: string, filter: 'points' | 'goals' | 'assists' = 'points', take?: number) {
+        const where: Prisma.PlayerWhereInput = {}
+
+        if (position) {
+            where.position = {
+                contains: position,
+                mode: 'insensitive',
+            }
+        }
+
+        const team = await prisma.team.findUnique({
+            where: {
+                teamCode: id.toUpperCase(),
+            },
+            include: {
+                players: {
+                    where,
+                    include: {
+                        playerStats: true,
+                    }
+                },
+            },
+        });
+
+        if (!team) {
+            return null;
+        }
+
+        const bestPlayers = team.players
+            .filter((p) => p.playerStats)
+            .sort((a, b) => (b.playerStats![filter] ?? 0) - (a.playerStats![filter] ?? 0))
+            .slice(0, take ?? 3)
+            .map((p) => ({
+                id: p.id,
+                fullName: p.fullName,
+                position: p.position,
+                playerStats: {}
+            }));
+
+        if (includeStats) {
+            bestPlayers.forEach((p, i) => {
+                const player = team.players[i];
+                if (player.playerStats) {
+                    p.playerStats = {
+                        points: player.playerStats.points,
+                        goals: player.playerStats.goals,
+                        assists: player.playerStats.assists,
+                    };
+                }
+            });
+        }
+
+        return {
+            teamCode: team.teamCode,
+            name: team.name,
+            bestPlayers
+        };
     }
 }
