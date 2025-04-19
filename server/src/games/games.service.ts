@@ -18,11 +18,11 @@ export class GamesService {
             ({
                 gameId: game.id,
                 homeTeam: {
-                    fullName: `${game.homeTeam.placeName.default} ${game.homeTeam.commonName.default}`,
+                    name: `${game.homeTeam.placeName.default} ${game.homeTeam.commonName.default}`,
                     teamCode: game.homeTeam.abbrev,
                 },
                 awayTeam: {
-                    fullName: `${game.awayTeam.placeName.default} ${game.awayTeam.commonName.default}`,
+                    name: `${game.awayTeam.placeName.default} ${game.awayTeam.commonName.default}`,
                     teamCode: game.awayTeam.abbrev,
                 },
             })
