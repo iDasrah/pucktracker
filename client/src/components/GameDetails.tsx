@@ -6,9 +6,9 @@ import {getGameDetails} from "../api.ts";
 const GameDetails = () => {
     const { id: gameId } = useParams<{ id: string }>();
     const [gameDetails, setGameDetails] = useState<Game | null>(null);
-    const [position, setPosition] = useState<string>('forward');
-    const [filter, setFilter] = useState<string>('points');
-    const [take, setTake] = useState<number>(5);
+    const [position] = useState<string>('forward');
+    const [filter] = useState<string>('points');
+    const [take] = useState<number>(5);
 
     const fetchGameDetails = async () => {
         try {
