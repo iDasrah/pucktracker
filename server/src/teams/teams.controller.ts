@@ -13,6 +13,17 @@ export class TeamsController {
         return this.teamsService.getAllTeams(includePlayers, name);
     }
 
+    @Get(':id/players/best')
+    getBestPlayers(
+        @Param('id') id: string,
+        @Query('includeStats', new DefaultValuePipe(false), ParseBoolPipe) includeStats?: boolean,
+        @Query('position') position?: string,
+        @Query('filter', new DefaultValuePipe('points')) filter?: 'points' | 'goals' | 'assists',
+        @Query('take', new DefaultValuePipe(3), ParseIntPipe) take?: number
+    ) {
+        return this.teamsService.getBestPlayers(id, includeStats, position, filter, take);
+    }
+
     @Get('/:id/players')
     getTeamPlayers(
         @Param('id') id: string,
@@ -24,7 +35,10 @@ export class TeamsController {
     }
 
     @Get(':id')
-    getOneTeam(@Param('id') id: string) {
-        return this.teamsService.getOneTeam(id);
+    getOneTeam(
+        @Param('id') id: string,
+        @Query('includePlayers', new DefaultValuePipe(false), ParseBoolPipe) includePlayers?: boolean,
+    ) {
+        return this.teamsService.getOneTeam(id, includePlayers);
     }
 }

@@ -11,9 +11,19 @@ export const getTodayGames = async () => {
     }
 }
 
-export const getGameDetails = async (gameId: number) => {
+export const getGameDetails = async (gameId: number, position?: string, filter?: string, take?: number) => {
+    let url = `${API_URL}/games/${gameId}/players/best`;
+    const params = new URLSearchParams();
+
+    if (position) params.append('position', position);
+    if (filter) params.append('filter', filter);
+    if (take) params.append('take', String(take));
+
+    if (params.toString()) {
+        url += `?${params.toString()}`;
+    }
+
     try {
-        const url = `${API_URL}/games/${gameId}/bestplayers`;
         const response = await fetch(url);
         return await response.json();
     } catch (error) {
@@ -22,9 +32,20 @@ export const getGameDetails = async (gameId: number) => {
     }
 }
 
-export const getBestPlayers = async (filter: string, take: number) => {
+export const getBestPlayers = async (includeStats?: boolean, filter?: string, take?: number, position?: string) => {
+    let url = `${API_URL}/players/best`;
+    const params = new URLSearchParams();
+
+    if (includeStats) params.append('includeStats', String(includeStats));
+    if (filter) params.append('filter', filter);
+    if (take) params.append('take', String(take));
+    if (position) params.append('position', position);
+
+    if (params.toString()) {
+        url += `?${params.toString()}`;
+    }
+
     try {
-        const url = `${API_URL}/players/best?filter=${filter}&take=${take}`;
         const response = await fetch(url);
         return await response.json();
     } catch (error) {
