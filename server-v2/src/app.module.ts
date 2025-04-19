@@ -10,9 +10,10 @@ import { GamesService } from './games/games.service';
 import { PlayersModule } from './players/players.module';
 import { TeamsModule } from './teams/teams.module';
 import { GamesModule } from './games/games.module';
+import { CronModule } from './cron/cron.module';
 
 @Module({
-    imports: [PlayersModule, TeamsModule, GamesModule],
+    imports: [PlayersModule, TeamsModule, GamesModule, CronModule],
     controllers: [AppController],
     providers: [AppService],
 })
