@@ -35,11 +35,6 @@ const Header = () => {
                                 Joueurs
                             </NavLink>
                         </li>
-                        <li className="nav-item">
-                            <NavLink to="/games">
-                                Matchs
-                            </NavLink>
-                        </li>
                     </ul>
                 </nav>
             </header>
