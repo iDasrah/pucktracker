@@ -7,6 +7,7 @@ const App = () => {
     const { data: todayGames, isLoading, isError } = useQuery({
         queryKey: ['todayGames'],
         queryFn: getTodayGames,
+        staleTime: 10000
     });
 
     if (isLoading) {
