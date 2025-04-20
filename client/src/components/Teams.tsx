@@ -1,26 +1,29 @@
-import {useEffect, useState} from "react";
 import {Team} from "../types.ts";
 import {getAllTeams} from "../api.ts";
 import {useDebounce} from "../hooks/useDebounce.ts";
 import {Link} from "react-router";
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
 const Teams = () => {
-    const [teams, setTeams] = useState<Team[]>([])
     const [filter, setFilter] = useState<string>("")
     const debouncedFilter = useDebounce(filter, 100);
+    const { data: teams, isLoading, isError } = useQuery({
+        queryKey: ['teams', debouncedFilter],
+        queryFn: () => getAllTeams(debouncedFilter),
+    });
 
-    const fetchTeams = async () => {
-        try {
-            const data = await getAllTeams(debouncedFilter);
-            setTeams(data);
-        } catch (error) {
-            console.error("Error fetching teams:", error);
-        }
+    if (isLoading) {
+        return <div className="text-center">Loading...</div>;
     }
 
-    useEffect(() => {
-        fetchTeams();
-    }, [debouncedFilter]);
+    if (!teams) {
+        return <div className="text-center">Aucune équipe trouvée.</div>;
+    }
+
+    if (isError) {
+        return <div className="text-center">Erreur lors de la récupération des équipes.</div>;
+    }
 
     return (
         <>
@@ -31,7 +34,7 @@ const Teams = () => {
                     <input className="border rounded-lg p-1" type="text" value={filter} onChange={(e) => setFilter(e.target.value)} />
                 </div>
                 <div className="flex flex-col gap-2 justify-center items-center md:flex-row md:justify-start md:flex-wrap md:gap-4">
-                    {teams.map((team) => (
+                    {teams.map((team: Team) => (
                         <div key={team.teamCode} className="min-w-full rounded-lg p-4 flex flex-col gap-2 justify-center items-center bg-dark md:min-w-85">
                             <h5 className="font-semibold">{team.name}</h5>
                             <p className="text-gray-200">Abbréviation: {team.teamCode}</p>

@@ -1,24 +1,25 @@
 import {useParams} from "react-router";
-import {useEffect, useState} from "react";
-import type {Player} from "../types.ts";
 import {getPlayer} from "../api.ts";
+import { useQuery } from '@tanstack/react-query';
 
 const Player = () => {
     const { playerId } = useParams<{ playerId: string }>();
-    const [player, setPlayer] = useState<Player | null>(null);
+    const { data: player, isLoading, isError } = useQuery({
+        queryKey: ['player', playerId],
+        queryFn: () => getPlayer(Number(playerId)),
+    })
 
-    const fetchPlayer = async () => {
-        try {
-            const data = await getPlayer(Number(playerId));
-            setPlayer(data);
-        } catch (error) {
-            console.error("Error fetching player:", error);
-        }
+    if (isLoading) {
+        return <div className="text-center">Loading...</div>;
     }
 
-    useEffect(() => {
-        fetchPlayer();
-    }, [playerId]);
+    if (!player) {
+        return <div className="text-center">Aucun joueur trouvé.</div>;
+    }
+
+    if (isError) {
+        return <div className="text-center">Erreur lors de la récupération du joueur.</div>;
+    }
 
     return (
         <>

@@ -1,24 +1,26 @@
 import {Link, useParams} from "react-router";
-import type {Team} from "../types.ts";
-import {useEffect, useState} from "react";
 import {getTeam} from "../api.ts";
+import { useQuery } from '@tanstack/react-query';
+import { Player } from '../types.ts';
 
 const Team = () => {
     const { teamCode } = useParams<{teamCode: string}>();
-    const [team, setTeam] = useState<Team>();
+    const { data: team, isLoading, isError } = useQuery({
+        queryKey: ['team', teamCode],
+        queryFn: () => getTeam(teamCode as string),
+    });
 
-    const fetchTeam = async () => {
-        try {
-            const data = await getTeam(teamCode as string);
-            setTeam(data);
-        } catch (error) {
-            console.error("Error fetching team:", error);
-        }
+    if (isLoading) {
+        return <div className="text-center">Loading...</div>;
     }
 
-    useEffect(() => {
-        fetchTeam();
-    }, [teamCode]);
+    if (!team) {
+        return <div className="text-center">Aucune équipe trouvée.</div>;
+    }
+
+    if (isError) {
+        return <div className="text-center">Erreur lors de la récupération de l'équipe.</div>;
+    }
 
     return (
         <>
@@ -28,7 +30,7 @@ const Team = () => {
                     <div className="details-card">
                         <h3 className="details-card-team-name">Joueurs de {team?.name}</h3>
                         <div className="w-full flex flex-col gap-2 justify-center items-center md:flex-row md:justify-start md:flex-wrap md:gap-4">
-                            {team?.players?.map((player) => (
+                            {team?.players?.map((player: Player) => (
                                 <Link to={`/players/${player.id}`} key={player.id} className="min-w-full text-gray-200 bg-primary rounded-lg p-4 flex flex-col gap-2 justify-center items-center md:min-w-83">
                                     {player.fullName}
                                 </Link>
