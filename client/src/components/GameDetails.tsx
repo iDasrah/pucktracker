@@ -1,8 +1,8 @@
-import {Game} from "../types.ts";
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import {useParams} from "react-router";
 import {getGameDetails} from "../api.ts";
 import GameDetailsCard from './GameDetailsCard.tsx';
+import { useQuery } from '@tanstack/react-query';
 
 enum Filter {
     POINTS = "points",
@@ -12,28 +12,30 @@ enum Filter {
 
 const GameDetails = () => {
     const { id: gameId } = useParams<{ id: string }>();
-    const [gameDetails, setGameDetails] = useState<Game | null>(null);
     const [position, setPosition] = useState<string>('forward');
     const [filter, setFilter] = useState<string>('points');
     const [take, setTake] = useState<number>(5);
-
-    const fetchGameDetails = async () => {
-        try {
-            const data = await getGameDetails(Number(gameId), position, filter, take);
-            setGameDetails(data);
-        } catch (error) {
-            console.error("Error fetching game details:", error);
-        }
-    };
+    const { data: gameDetails, isLoading, isError } = useQuery({
+        queryKey: ['gameDetails', gameId, position, filter, take],
+        queryFn: () => getGameDetails(Number(gameId), position, filter, take),
+    });
 
     const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const selectedFilter = event.target.value as Filter;
         setFilter(selectedFilter);
     }
 
-    useEffect(() => {
-        fetchGameDetails();
-    }, [gameId, position, filter, take]);
+    if (isLoading) {
+        return <div className="text-center">Loading...</div>;
+    }
+
+    if (!gameDetails) {
+        return <div className="text-center">Aucun détail de match trouvé.</div>;
+    }
+
+    if (isError) {
+        return <div className="text-center">Erreur lors de la récupération des détails du match.</div>;
+    }
 
     return (
         <>

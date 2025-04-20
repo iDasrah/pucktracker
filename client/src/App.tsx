@@ -1,20 +1,25 @@
 import GameList from "./components/GameList.tsx";
-import {Game} from "./types.ts";
-import {useEffect, useState} from "react";
 import {getTodayGames} from "./api.ts";
+import { useQuery } from '@tanstack/react-query';
 
 
 const App = () => {
-    const [todayGames, setTodayGames] = useState<Game[]>([]);
+    const { data: todayGames, isLoading, isError } = useQuery({
+        queryKey: ['todayGames'],
+        queryFn: getTodayGames,
+    });
 
-    const fetchGames = async () => {
-        const data = await getTodayGames();
-        setTodayGames(data);
-    };
+    if (isLoading) {
+        return <div className="text-center">Loading...</div>;
+    }
 
-    useEffect(() => {
-        fetchGames();
-    }, []);
+    if (!todayGames) {
+        return <div className="text-center">Aucun match trouvé.</div>;
+    }
+
+    if (isError) {
+        return <div className="text-center">Erreur lors de la récupération des matchs.</div>;
+    }
 
     return (
         <>
