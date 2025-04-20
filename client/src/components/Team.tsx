@@ -8,6 +8,7 @@ const Team = () => {
     const { data: team, isLoading, isError } = useQuery({
         queryKey: ['team', teamCode],
         queryFn: () => getTeam(teamCode as string),
+        staleTime: 10000
     });
 
     if (isLoading) {

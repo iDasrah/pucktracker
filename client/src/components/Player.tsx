@@ -7,6 +7,7 @@ const Player = () => {
     const { data: player, isLoading, isError } = useQuery({
         queryKey: ['player', playerId],
         queryFn: () => getPlayer(Number(playerId)),
+        staleTime: 10000
     })
 
     if (isLoading) {

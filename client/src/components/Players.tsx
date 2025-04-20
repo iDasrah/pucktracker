@@ -17,6 +17,7 @@ const Players = () => {
     const { data: bestPlayers, isLoading, isError } = useQuery({
         queryKey: ['bestPlayers', filter, take, position],
         queryFn: () => getBestPlayers(true, filter, take, position),
+        staleTime: 10000
     });
 
     if (isLoading) {

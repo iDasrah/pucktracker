@@ -18,6 +18,7 @@ const GameDetails = () => {
     const { data: gameDetails, isLoading, isError } = useQuery({
         queryKey: ['gameDetails', gameId, position, filter, take],
         queryFn: () => getGameDetails(Number(gameId), position, filter, take),
+        staleTime: 10000
     });
 
     const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {

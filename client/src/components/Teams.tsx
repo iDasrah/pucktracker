@@ -11,6 +11,7 @@ const Teams = () => {
     const { data: teams, isLoading, isError } = useQuery({
         queryKey: ['teams', debouncedFilter],
         queryFn: () => getAllTeams(debouncedFilter),
+        staleTime: 10000
     });
 
     if (isLoading) {
